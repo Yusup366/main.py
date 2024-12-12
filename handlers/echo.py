@@ -19,6 +19,10 @@ async def echo_handler(message: types.Message):
 
 
 
+
 def register_echo_handlers(dp: Dispatcher):
     dp.register_message_handler(game, commands=['game'])
-    dp.register_message_handler(echo_handler, lambda message: not message.text.startswith('/'))
+    dp.register_message_handler(echo_handler)
+
+
+

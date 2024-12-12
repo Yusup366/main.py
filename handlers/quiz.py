@@ -1,5 +1,7 @@
 from aiogram import types, Dispatcher
 from  aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyexpat.errors import messages
+
 from confik import bot
 
 
@@ -26,6 +28,10 @@ async def quiz_1(message: types.Message):
     )
 
 async def quiz_2(call: types.CallbackQuery):
+    keyboard = InlineKeyboardMarkup(resize_keyboard=True, row_width=2)
+
+    button = InlineKeyboardButton('Далее', callback_data='quiz_3')
+    keyboard.add(button)
 
     question = 'Python, JavaScript, Java, PHP and Swift'
     answer = ['Python','JavaScript','PHP','Swift']
@@ -40,7 +46,7 @@ async def quiz_2(call: types.CallbackQuery):
         correct_option_id=0,
         explanation='Все с тобой понятно',
         open_period=180,
-
+        reply_markup=keyboard
 
     )
 
@@ -57,12 +63,12 @@ async def quiz_3(callback: types.CallbackQuery):
         is_anonymous=False,
         type='quiz',
         correct_option_id=1,
-        explanation='Молодец!',
+        explanation='Футбол топ!',
         open_period=60,
-        reply_markup=keyboard
+
     )
 
 def register_quiz_handlers(dp: Dispatcher):
     dp.register_message_handler(quiz_1, commands='quiz')
     dp.register_callback_query_handler(quiz_2, text='quiz_2')
-    dp.register_message_handler(quiz_3, commands='quiz_3')
+    dp.register_callback_query_handler(quiz_3, text='quiz_3')
