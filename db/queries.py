@@ -1,5 +1,3 @@
-from tkinter.constants import INSERT
-
 CREATE_TABLE_store = """
     CREATE TABLE IF NOT EXISTS store (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

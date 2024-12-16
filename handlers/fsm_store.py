@@ -3,7 +3,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from buttons import cancel_markup, start_markup
+from buttons import cancel_markup, start_markup, yes_markup
 from aiogram.types import ReplyKeyboardRemove
 from db import main_db
 
@@ -83,11 +83,13 @@ async def load_photo(message: types.Message, state: FSMContext):
                                caption=f'Название модели - {data["modelname"]}\n'
                              f'Размер - {data["size"]}\n'
                              f'Категория - {data["category"]}\n'
-                             f'Стоимость - {data["price"]}\n')
+                             f'Стоимость - {data["price"]}\n'
+                             f"Артикул - {data['productid']}\n"
+                             f"Информация о продукте - {data['infoproduct']}",)
 
 
 async def load_submit(message: types.Message, state: FSMContext):
-    if message.text == 'Да':
+    if message.text.lower() == 'Да'.lower():
         async with state.proxy() as data:
             await main_db.sql_insert_store(
                 modelname=data['modelname'],
@@ -103,12 +105,12 @@ async def load_submit(message: types.Message, state: FSMContext):
             await message.answer('Ваши данные в базе!')
             await state.finish()
 
-    elif message.text == 'Нет':
+    elif message.text.lower() == 'Нет'.lower():
         await message.answer('Хорошо, отменено!')
         await state.finish()
 
     else:
-        await message.answer('Введите Да или Нет!')
+        await message.answer('Введите Да или Нет!',reply_markup=yes_markup)
 
 async def cancel_fsm(message: types.Message, state: FSMContext):
     curses_state = await state.get_state()
