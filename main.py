@@ -1,14 +1,17 @@
 # main.py
-from aiogram import executor, Dispatcher
+from aiogram import executor
 from confik import bot, dp, Admins
 import logging
 from handlers import commands, echo, quiz, fsm_reg ,fsm_store
 import buttons
+from db import main_db
 
 async def on_startup(_):
     for admin in Admins:
         await  bot.send_message(chat_id=admin, text='Бот включен',
                                 reply_markup=buttons.start_markup)
+    await main_db.DataBase_creatr()
+
 
 async def on_shutdown(_):
     for admin in Admins:

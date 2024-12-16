@@ -1,5 +1,5 @@
 from aiogram import types, Dispatcher
-from  aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyexpat.errors import messages
 
 from confik import bot
