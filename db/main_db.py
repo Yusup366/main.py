@@ -17,6 +17,7 @@ async def sql_insert_store(modelname, Size, Price, Photo):
     cursor.execute(queries.INSERT_store_QUERY,(
         modelname, Size, Price, Photo
     ))
+    db.commit()
 
 async def sql_insert_product(productid, category, infoproduct):
     cursor.execute(queries.INSERT_products_details_QUERY, (

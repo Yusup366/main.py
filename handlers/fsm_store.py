@@ -78,7 +78,7 @@ async def load_photo(message: types.Message, state: FSMContext):
         data['photo'] = message.photo[-1].file_id
 
     await FSMStore.next()
-    await message.answer(f'Верные ли данные?')
+    await message.answer(f'Верные ли данные?',reply_markup=yes_markup)
     await message.answer_photo(photo=data['photo'],
                                caption=f'Название модели - {data["modelname"]}\n'
                              f'Размер - {data["size"]}\n'
@@ -95,7 +95,7 @@ async def load_submit(message: types.Message, state: FSMContext):
                 modelname=data['modelname'],
                 Size=data['size'],
                 Price=data['price'],
-                Photo=data['photo']
+                Photo=data['photo'],
             )
             await main_db.sql_insert_product(
                 productid=data['productid'],
@@ -110,7 +110,7 @@ async def load_submit(message: types.Message, state: FSMContext):
         await state.finish()
 
     else:
-        await message.answer('Введите Да или Нет!',reply_markup=yes_markup)
+        await message.answer('Введите Да или Нет!')
 
 async def cancel_fsm(message: types.Message, state: FSMContext):
     curses_state = await state.get_state()

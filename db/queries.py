@@ -4,6 +4,7 @@ CREATE_TABLE_store = """
     modelname TEXT,
     Size TEXT,
     Price TEXT,
+    productid TEXT,
     Photo TEXT,
     Submit TEXT
     )
@@ -12,8 +13,8 @@ CREATE_TABLE_store = """
 
 
 INSERT_store_QUERY = """
-    INSERT INTO store (modelname, Size, Price, Photo)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO store (modelname, Size, Price, productid, Photo)
+    VALUES (?, ?, ?, ?, ?)
 """
 
 
