@@ -35,3 +35,16 @@ VALUES (?, ?, ?)
 """
 
 
+CREATE_TABLE_collection_products = """
+    CREATE TABLE IF NOT EXISTS collection_products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    productid TEXT,
+    collection TEXT
+    )
+"""
+
+INSERT_collection_products_QUERY = """
+INSERT INTO collection_products (productid, collection)
+VALUES (?, ?)
+"""
+

@@ -16,6 +16,7 @@ class FSMStore(StatesGroup):
     Price = State()
     Productid = State()
     Infoproduct = State()
+    Collection = State()
     Photo = State()
     Submit = State()
 
@@ -70,8 +71,14 @@ async def load_infoproduct(message: types.Message, state: FSMContext):
         data['infoproduct'] = message.text
 
     await FSMStore.next()
-    await message.answer('Отправте фотку продукта')
+    await message.answer('Название вашей колекций')
 
+async def load_collection(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['collection'] = message.text
+
+    await FSMStore.next()
+    await message.answer('Добавте фото продукта!')
 
 async def load_photo(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
@@ -85,7 +92,8 @@ async def load_photo(message: types.Message, state: FSMContext):
                              f'Категория - {data["category"]}\n'
                              f'Стоимость - {data["price"]}\n'
                              f"Артикул - {data['productid']}\n"
-                             f"Информация о продукте - {data['infoproduct']}",)
+                             f"Информация о продукте - {data['infoproduct']}\n"
+                             f"Добавленно в вашу коллекцию - {data['collection']}")
 
 
 async def load_submit(message: types.Message, state: FSMContext):
@@ -102,6 +110,11 @@ async def load_submit(message: types.Message, state: FSMContext):
                 category=data['category'],
                 infoproduct=data['infoproduct']
             )
+            await main_db.sql_insert_collection(
+                collection=data['collection'],
+                productid=data['productid']
+            )
+
             await message.answer('Ваши данные в базе!')
             await state.finish()
 
@@ -133,5 +146,6 @@ def register_fsmstore_handlers(dp: Dispatcher):
     dp.register_message_handler(load_price, state=FSMStore.Price)
     dp.register_message_handler(load_productid, state=FSMStore.Productid)
     dp.register_message_handler(load_infoproduct, state=FSMStore.Infoproduct)
+    dp.register_message_handler(load_collection, state=FSMStore.Collection)
     dp.register_message_handler(load_photo, state=FSMStore.Photo, content_types=['photo'])
     dp.register_message_handler(load_submit, state=FSMStore.Submit)
