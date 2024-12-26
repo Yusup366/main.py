@@ -1,4 +1,3 @@
-# fsm_reg.py
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -10,12 +9,12 @@ from db import main_db
 
 
 class FSMStore(StatesGroup):
-    Modelname = State()
+    name_product = State()
     Size = State()
     Category = State()
     Price = State()
-    Productid = State()
-    Infoproduct = State()
+    Product_id = State()
+    Info_product = State()
     Collection = State()
     Photo = State()
     Submit = State()
@@ -26,11 +25,11 @@ class FSMStore(StatesGroup):
 
 async def start_fsm_story(message: types.Message):
     await message.answer('Название модели', reply_markup=cancel_markup)
-    await FSMStore.Modelname.set()
+    await FSMStore.name_product.set()
 
-async def load_modelname(message: types.Message, state: FSMContext):
+async def load_name_product(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data['modelname'] = message.text
+        data['name_product'] = message.text
 
     await FSMStore.next()
     await message.answer('Укажите свой размер: ')
@@ -59,16 +58,16 @@ async def load_price(message: types.Message, state: FSMContext):
     await FSMStore.next()
     await message.answer('Отправте артикул: ')
 
-async def load_productid(message: types.Message, state: FSMContext):
+async def load_product_id(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data['productid'] = message.text
+        data['product_id'] = message.text
 
     await FSMStore.next()
     await message.answer('Введите инфармацию продукта: ')
 
-async def load_infoproduct(message: types.Message, state: FSMContext):
+async def load_info_product(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data['infoproduct'] = message.text
+        data['info_product'] = message.text
 
     await FSMStore.next()
     await message.answer('Название вашей колекций')
@@ -87,12 +86,12 @@ async def load_photo(message: types.Message, state: FSMContext):
     await FSMStore.next()
     await message.answer(f'Верные ли данные?',reply_markup=yes_markup)
     await message.answer_photo(photo=data['photo'],
-                               caption=f'Название модели - {data["modelname"]}\n'
+                               caption=f'Название модели - {data["name_product"]}\n'
                              f'Размер - {data["size"]}\n'
                              f'Категория - {data["category"]}\n'
                              f'Стоимость - {data["price"]}\n'
-                             f"Артикул - {data['productid']}\n"
-                             f"Информация о продукте - {data['infoproduct']}\n"
+                             f"Артикул - {data['product_id']}\n"
+                             f"Информация о продукте - {data['info_product']}\n"
                              f"Добавленно в вашу коллекцию - {data['collection']}")
 
 
@@ -100,19 +99,20 @@ async def load_submit(message: types.Message, state: FSMContext):
     if message.text.lower() == 'Да'.lower():
         async with state.proxy() as data:
             await main_db.sql_insert_store(
-                modelname=data['modelname'],
-                Size=data['size'],
-                Price=data['price'],
-                Photo=data['photo'],
+                name_product=data['name_product'],
+                size=data['size'],
+                price=data['price'],
+                product_id=data['product_id'],
+                photo=data['photo'],
             )
             await main_db.sql_insert_product(
-                productid=data['productid'],
+                product_id=data['product_id'],
                 category=data['category'],
-                infoproduct=data['infoproduct']
+                info_product=data['info_product']
             )
             await main_db.sql_insert_collection(
                 collection=data['collection'],
-                productid=data['productid']
+                product_id=data['product_id']
             )
 
             await message.answer('Ваши данные в базе!')
@@ -140,12 +140,12 @@ def register_fsmstore_handlers(dp: Dispatcher):
                                                  ignore_case=True))
 
     dp.register_message_handler(start_fsm_story, commands=['store'])
-    dp.register_message_handler(load_modelname, state=FSMStore.Modelname)
+    dp.register_message_handler(load_name_product, state=FSMStore.name_product)
     dp.register_message_handler(load_size, state=FSMStore.Size)
     dp.register_message_handler(load_category, state=FSMStore.Category)
     dp.register_message_handler(load_price, state=FSMStore.Price)
-    dp.register_message_handler(load_productid, state=FSMStore.Productid)
-    dp.register_message_handler(load_infoproduct, state=FSMStore.Infoproduct)
+    dp.register_message_handler(load_product_id, state=FSMStore.Product_id)
+    dp.register_message_handler(load_info_product, state=FSMStore.Info_product)
     dp.register_message_handler(load_collection, state=FSMStore.Collection)
     dp.register_message_handler(load_photo, state=FSMStore.Photo, content_types=['photo'])
     dp.register_message_handler(load_submit, state=FSMStore.Submit)

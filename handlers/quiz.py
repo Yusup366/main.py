@@ -62,7 +62,7 @@ async def quiz_3(callback: types.CallbackQuery):
         options=answer,
         is_anonymous=False,
         type='quiz',
-        correct_option_id=1,
+        correct_option_id=0,
         explanation='Футбол топ!',
         open_period=60,
 
