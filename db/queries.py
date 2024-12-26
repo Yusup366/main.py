@@ -4,7 +4,7 @@ CREATE_TABLE_store = """
     name_product TEXT,
     size TEXT,
     price TEXT,
-    productid TEXT,
+    product_id TEXT,
     photo TEXT,
     submit TEXT
     )

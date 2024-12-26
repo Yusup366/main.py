@@ -111,8 +111,8 @@ async def load_submit(message: types.Message, state: FSMContext):
                 info_product=data['info_product']
             )
             await main_db.sql_insert_collection(
-                collection=data['collection'],
-                product_id=data['product_id']
+                product_id=data['product_id'],
+                collection=data['collection']
             )
 
             await message.answer('Ваши данные в базе!')
